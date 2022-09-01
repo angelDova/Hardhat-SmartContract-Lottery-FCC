@@ -54,11 +54,11 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
     /* Functions */
     constructor(
         address vrfCoordinatorV2,
-        uint64 subscriptionId,
-        bytes32 gasLane, // keyHash
-        uint256 interval,
         uint256 entranceFee,
-        uint32 callbackGasLimit
+        bytes32 gasLane, // keyHash
+        uint64 subscriptionId,
+        uint32 callbackGasLimit,
+        uint256 interval
     ) VRFConsumerBaseV2(vrfCoordinatorV2) {
         i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
         i_gasLane = gasLane;
@@ -105,9 +105,9 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
             bytes memory /* performData */
         )
     {
-        bool isOpen = RaffleState.OPEN == s_raffleState;
+        bool isOpen = (RaffleState.OPEN == s_raffleState);
         bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
-        bool hasPlayers = s_players.length > 0;
+        bool hasPlayers = (s_players.length > 0);
         bool hasBalance = address(this).balance > 0;
         upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
         return (upkeepNeeded, "0x0"); // can we comment this out?
